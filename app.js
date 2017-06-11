@@ -2,6 +2,7 @@ const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+const methodOverride = require('method-override');
 
 mongoose.connect('mongodb://localhost/nodekb');
 mongoose.Promise = global.Promise;
@@ -31,11 +32,18 @@ app.set('view engine', 'pug');
 app.use(bodyParser.urlencoded({extended:false}));
 app.use(bodyParser.json());
 
+// method-override middleware
+app.use(methodOverride('_method'));
+
 // Set Public folder
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Home route
-app.get('/', function (req, res) {
+app.get('/', function(req, res){
+    res.redirect('/articles');
+});
+
+// Find all articles route
+app.get('/articles', function (req, res) {
     Article.find({}, function (err, articles) {
         if (err) {
             console.log(err);
@@ -79,6 +87,44 @@ app.get('/articles/:id', function(req, res){
         res.render('article', {
             article: article
         });
+    });
+});
+
+// Load Edit Form
+app.get('/articles/edit/:id', function(req,res){
+    Article.findById(req.params.id, function(err, article){
+        res.render('edit_article', {
+            title: 'Edit Article',
+            article: article
+        });
+    });
+});
+
+// Edit Article Route
+app.put('/articles/:id', function(req, res){
+    let article = {};
+    article.title = req.body.title;
+    article.author = req.body.author;
+    article.body = req.body.body;
+
+    let query = {_id: req.params.id}
+
+    Article.update(query, article, function(err){
+        if(err){
+            console.log(err);
+            return;
+        }else{
+            res.redirect('/');
+        }
+    });
+});
+
+// Delete Article Route
+app.delete('/articles/:id', function(req, res){
+    let query = {_id: req.params.id}
+
+    Article.remove(query, function(err){
+        console.log(err);
     });
 });
 
