@@ -1,0 +1,23 @@
+{
+  "name": "nodekb",
+  "version": "1.0.0",
+  "description": "Sample Project for an Article DB",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/A360RN/nodekb.git"
+  },
+  "author": "A360RN",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/A360RN/nodekb/issues"
+  },
+  "homepage": "https://github.com/A360RN/nodekb#readme",
+  "dependencies": {
+    "body-parser": "^1.17.2",
+    "express": "^4.15.3"
+  }
+}
