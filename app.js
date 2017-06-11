@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 
 mongoose.connect('mongodb://localhost/nodekb');
+mongoose.Promise = global.Promise;
 let db = mongoose.connection;
 
 // Check connection
@@ -29,6 +30,9 @@ app.set('view engine', 'pug');
 // body-parser middleware
 app.use(bodyParser.urlencoded({extended:false}));
 app.use(bodyParser.json());
+
+// Set Public folder
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Home route
 app.get('/', function (req, res) {
@@ -66,6 +70,15 @@ app.post('/articles', function (req, res) {
         }else{
             res.redirect('/');
         }
+    });
+});
+
+// Find Article by Id Route
+app.get('/articles/:id', function(req, res){
+    Article.findById(req.params.id, function(err, article){
+        res.render('article', {
+            article: article
+        });
     });
 });
 
